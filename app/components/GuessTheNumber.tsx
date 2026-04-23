@@ -1,48 +1,46 @@
 "use client";
+import { SubmitEvent, useState } from "react";
 
 export const GuessTheNumber = () => {
-  const randomNumber = () => {
-    return Math.floor(Math.random() * 100) + 1;
-  };
+  const [numberToGuess] = useState(Math.floor(Math.random() * 100) + 1);
+  const [userGuess, setUserGuess] = useState<number>(0);
+  const [message, setMessage] = useState("");
 
-  const numberToGuess = randomNumber();
-
-  const handleGuess = () => {
-    const userGuess = +(
-      document.getElementById("userGuess") as HTMLInputElement
-    ).value;
+  const handleGuess = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     if (userGuess === numberToGuess) {
-      alert("You guessed correct!");
+      setMessage("You guessed correct!");
     }
     if (userGuess > numberToGuess) {
-      alert("Your guess is too high...");
+      setMessage("Your guess is too high...");
     }
     if (userGuess < numberToGuess) {
-      alert("Your guess is too low");
+      setMessage("Your guess is too low...");
     }
 
     console.log(numberToGuess);
+    console.log(userGuess);
   };
-
-  //Borde kunna fixa conditionalrendering
 
   return (
     <div className="w-full flex justify-center">
-      <div className="flex flex-col justify-center gap-4 items-center border-2 border-slate-600 rounded-md p-5">
+      <form
+        onSubmit={handleGuess}
+        className="flex flex-col justify-center gap-4 items-center border-2 border-slate-600 rounded-md p-5"
+      >
         <label>Guess a number 1-100:</label>
         <input
+          onChange={(e) => setUserGuess(+e.target.value)}
           type="number"
           className="w-full border-2 border-slate-600 rounded-md"
           id="userGuess"
         />
-        <button
-          onClick={handleGuess}
-          className="w-full border-2 border-slate-600 rounded-md hover:bg-slate-600 transition"
-        >
+        <button className="w-full border-2 border-slate-600 rounded-md hover:bg-slate-600 transition">
           Guess
         </button>
-      </div>
+        <p>{message}</p>
+      </form>
     </div>
   );
 };
